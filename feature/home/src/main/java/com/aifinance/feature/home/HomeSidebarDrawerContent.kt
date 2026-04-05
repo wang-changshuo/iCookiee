@@ -47,6 +47,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.aifinance.core.designsystem.theme.BrandPrimary
 import com.aifinance.core.model.TransactionType
 import java.time.LocalDate
 import java.time.YearMonth
@@ -371,11 +372,6 @@ private fun FunctionGridCard(
 private fun QuickAccountingCard(
     onNavigateScheduledTransaction: () -> Unit,
 ) {
-    val items = listOf(
-        DrawerFunctionItem("快捷记账", Icons.Default.Sync, {}),
-        DrawerFunctionItem("自动记账", Icons.Default.AutoGraph, {}),
-        DrawerFunctionItem("定时记账", Icons.Default.CalendarMonth, onNavigateScheduledTransaction),
-    )
     Card(
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -384,19 +380,34 @@ private fun QuickAccountingCard(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Text(text = "快捷记账", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                items.forEach { item ->
-                    Column(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clickable(onClick = item.onClick),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(6.dp),
-                    ) {
-                        Icon(imageVector = item.icon, contentDescription = null, tint = Color(0xFF6B7280), modifier = Modifier.size(24.dp))
-                        Text(text = item.label, style = MaterialTheme.typography.bodyMedium, color = Color(0xFF374151))
-                    }
+            Text(
+                text = "定时记账",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                Column(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable(onClick = onNavigateScheduledTransaction)
+                        .padding(horizontal = 20.dp, vertical = 10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.CalendarMonth,
+                        contentDescription = null,
+                        tint = BrandPrimary,
+                        modifier = Modifier.size(28.dp),
+                    )
+                    Text(
+                        text = "定时记账",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color(0xFF374151),
+                    )
                 }
             }
         }

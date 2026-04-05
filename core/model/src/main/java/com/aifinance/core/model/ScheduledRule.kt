@@ -11,6 +11,8 @@ enum class ScheduledRecurrence {
     MONTHLY,
     WEEKDAYS,
     WEEKENDS,
+    /** Fire on the last calendar day of each month */
+    LAST_DAY_OF_MONTH,
     EVERY_THREE_MONTHS,
     EVERY_SIX_MONTHS,
     YEARLY,

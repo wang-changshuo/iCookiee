@@ -4,7 +4,9 @@ import com.aifinance.core.model.ScheduledRecurrence
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDateTime
+import java.time.YearMonth
 import java.time.ZoneId
+import java.time.temporal.TemporalAdjusters
 
 object ScheduleOccurrenceCalculator {
 
@@ -26,6 +28,10 @@ object ScheduleOccurrenceCalculator {
                     d = d.plusDays(1)
                 }
                 d
+            }
+            ScheduledRecurrence.LAST_DAY_OF_MONTH -> {
+                val last = start.toLocalDate().with(TemporalAdjusters.lastDayOfMonth())
+                LocalDateTime.of(last, start.toLocalTime())
             }
             else -> start
         }
@@ -55,6 +61,10 @@ object ScheduleOccurrenceCalculator {
             ScheduledRecurrence.MONTHLY -> local.plusMonths(1)
             ScheduledRecurrence.WEEKDAYS -> nextWeekday(local)
             ScheduledRecurrence.WEEKENDS -> nextWeekendDay(local)
+            ScheduledRecurrence.LAST_DAY_OF_MONTH -> {
+                val nextMonth = YearMonth.from(local.toLocalDate()).plusMonths(1)
+                LocalDateTime.of(nextMonth.atEndOfMonth(), local.toLocalTime())
+            }
             ScheduledRecurrence.EVERY_THREE_MONTHS -> local.plusMonths(3)
             ScheduledRecurrence.EVERY_SIX_MONTHS -> local.plusMonths(6)
             ScheduledRecurrence.YEARLY -> local.plusYears(1)
