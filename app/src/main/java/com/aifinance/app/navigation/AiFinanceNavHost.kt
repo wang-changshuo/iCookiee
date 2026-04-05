@@ -27,6 +27,8 @@ import com.aifinance.feature.home.editAssetAccountRoute
 import com.aifinance.feature.home.navigation.HOME_ROUTE
 import com.aifinance.feature.home.navigation.homeScreen
 import com.aifinance.feature.statistics.navigation.navigateToStatistics
+import com.aifinance.feature.scheduled.navigation.navigateToScheduledTransactionAdd
+import com.aifinance.feature.scheduled.navigation.scheduledTransactionAddScreen
 import com.aifinance.feature.scheduled.navigation.scheduledTransactionScreen
 import com.aifinance.feature.settings.navigation.settingsScreen
 import com.aifinance.feature.statistics.navigation.statisticsScreen
@@ -142,7 +144,11 @@ fun AiFinanceNavHost(
         statisticsScreen(onBack = { navController.popBackStack() })
         settingsScreen(onBack = { navController.popBackStack() })
         categoryManagementScreen(onBack = { navController.popBackStack() })
-        scheduledTransactionScreen(onBack = { navController.popBackStack() })
+        scheduledTransactionScreen(
+            onBack = { navController.popBackStack() },
+            onNavigateToAdd = { navController.navigateToScheduledTransactionAdd() },
+        )
+        scheduledTransactionAddScreen(onBack = { navController.popBackStack() })
         addTransactionScreen(
             onBack = { navController.popBackStack() },
             onSuccess = { navController.popBackStack() }

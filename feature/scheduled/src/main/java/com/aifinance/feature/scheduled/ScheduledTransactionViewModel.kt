@@ -79,6 +79,10 @@ class ScheduledTransactionViewModel @Inject constructor(
         initialValue = CategoryCatalog.categoriesForType(TransactionType.EXPENSE),
     )
 
+    /** All categories for resolving rule cards (any type). */
+    val allCategories: StateFlow<List<Category>> = categoryRepository.getAllCategories()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
     init {
         viewModelScope.launch {
             val id = accountRepository.getDefaultIncomeExpenseAccount()?.id
@@ -93,6 +97,19 @@ class ScheduledTransactionViewModel @Inject constructor(
         _form.update(transform)
     }
 
+    fun resetFormForAdd() {
+        _form.value = ScheduledFormState(
+            categoryId = CategoryCatalog.fallback(TransactionType.EXPENSE).id,
+        )
+        viewModelScope.launch {
+            val id = accountRepository.getDefaultIncomeExpenseAccount()?.id
+                ?: accountRepository.getFirstActiveAccount()?.id
+            if (id != null) {
+                _form.update { it.copy(accountId = id) }
+            }
+        }
+    }
+
     fun onTypeChanged(type: TransactionType) {
         if (type == TransactionType.TRANSFER) return
         val nextCategory = _form.value.categoryId
@@ -103,7 +120,7 @@ class ScheduledTransactionViewModel @Inject constructor(
         }
     }
 
-    fun saveRule() {
+    fun saveRule(onSuccess: () -> Unit = {}) {
         val state = _form.value
         var err: String? = null
 
@@ -174,6 +191,7 @@ class ScheduledTransactionViewModel @Inject constructor(
                 return@launch
             }
             _form.update { it.copy(isSaving = false, saveError = null) }
+            onSuccess()
         }
     }
 
