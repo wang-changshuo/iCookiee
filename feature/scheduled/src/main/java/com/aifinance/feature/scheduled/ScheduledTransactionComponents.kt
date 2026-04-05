@@ -91,11 +91,11 @@ internal fun scheduledEndSummary(rule: ScheduledRule): String = when (rule.endMo
     }
 }
 
-internal fun nextRunDateOnlyText(rule: ScheduledRule): String {
+internal fun nextRunDateTimeText(rule: ScheduledRule): String {
     val n = rule.nextRunAt ?: return "—"
     val z = ZoneId.systemDefault()
-    val date = LocalDateTime.ofInstant(n, z).toLocalDate()
-    return formatChineseDate(date)
+    val dt = LocalDateTime.ofInstant(n, z)
+    return "${formatChineseDate(dt.toLocalDate())} ${"%02d:%02d".format(dt.hour, dt.minute)}"
 }
 
 @Composable
@@ -207,7 +207,7 @@ internal fun ScheduledRuleListCard(
                     modifier = Modifier.weight(1f),
                 )
                 Text(
-                    text = "下一笔：${nextRunDateOnlyText(rule)}",
+                    text = "下一笔：${nextRunDateTimeText(rule)}",
                     style = IcokieTextStyles.labelSmall,
                     color = OnSurfaceSecondary,
                     modifier = Modifier.weight(1.2f),

@@ -1,6 +1,5 @@
 package com.aifinance.feature.home
 
-import android.app.TimePickerDialog
 import android.widget.NumberPicker
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,18 +15,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -35,8 +34,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -60,11 +59,14 @@ fun AppDateTimePickerDialog(
     onConfirm: (LocalDateTime) -> Unit,
 ) {
     var selectedDate by remember { mutableStateOf(initialDateTime.toLocalDate()) }
-    var selectedHour by remember { mutableIntStateOf(initialDateTime.hour) }
-    var selectedMinute by remember { mutableIntStateOf(initialDateTime.minute) }
+    var hourText by remember(initialDateTime) {
+        mutableStateOf("%02d".format(initialDateTime.hour))
+    }
+    var minuteText by remember(initialDateTime) {
+        mutableStateOf("%02d".format(initialDateTime.minute))
+    }
     var displayMonth by remember { mutableStateOf(YearMonth.from(initialDateTime)) }
     var showMonthWheel by remember { mutableStateOf(false) }
-    val context = LocalContext.current
 
     Dialog(onDismissRequest = onDismiss) {
         Surface(
@@ -124,44 +126,20 @@ fun AppDateTimePickerDialog(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(SurfaceSecondary)
-                        .clickable {
-                            TimePickerDialog(
-                                context,
-                                { _, hour, minute ->
-                                    selectedHour = hour
-                                    selectedMinute = minute
-                                },
-                                selectedHour,
-                                selectedMinute,
-                                true,
-                            ).show()
-                        }
-                        .padding(horizontal = 16.dp, vertical = 14.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = "时间",
-                        style = IcokieTextStyles.bodyLarge,
-                        color = OnSurfaceSecondary,
-                    )
-                    Text(
-                        text = "%02d:%02d".format(selectedHour, selectedMinute),
-                        style = IcokieTextStyles.titleMedium,
-                        color = OnSurfacePrimary,
-                    )
-                }
+                ManualTimeInputRow(
+                    hourText = hourText,
+                    minuteText = minuteText,
+                    onHourChange = { hourText = it.filter { c -> c.isDigit() }.take(2) },
+                    onMinuteChange = { minuteText = it.filter { c -> c.isDigit() }.take(2) },
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
                     onClick = {
-                        onConfirm(selectedDate.atTime(selectedHour, selectedMinute))
+                        val h = hourText.toIntOrNull()?.coerceIn(0, 23) ?: 0
+                        val m = minuteText.toIntOrNull()?.coerceIn(0, 59) ?: 0
+                        onConfirm(selectedDate.atTime(h, m))
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -185,6 +163,72 @@ fun AppDateTimePickerDialog(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ManualTimeInputRow(
+    hourText: String,
+    minuteText: String,
+    onHourChange: (String) -> Unit,
+    onMinuteChange: (String) -> Unit,
+) {
+    val fieldStyle = IcokieTextStyles.titleMedium.copy(
+        color = OnSurfacePrimary,
+        textAlign = TextAlign.Center,
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(SurfaceSecondary)
+            .padding(horizontal = 16.dp, vertical = 10.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = "时间",
+            style = IcokieTextStyles.bodyLarge,
+            color = OnSurfaceSecondary,
+        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            BasicTextField(
+                value = hourText,
+                onValueChange = onHourChange,
+                modifier = Modifier.width(44.dp),
+                textStyle = fieldStyle,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                decorationBox = { inner ->
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        inner()
+                    }
+                },
+            )
+            Text(":", style = IcokieTextStyles.titleMedium, color = OnSurfacePrimary)
+            BasicTextField(
+                value = minuteText,
+                onValueChange = onMinuteChange,
+                modifier = Modifier.width(44.dp),
+                textStyle = fieldStyle,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                decorationBox = { inner ->
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        inner()
+                    }
+                },
+            )
         }
     }
 }
