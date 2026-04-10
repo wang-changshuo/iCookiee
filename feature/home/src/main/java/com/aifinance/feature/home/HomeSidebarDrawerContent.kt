@@ -111,9 +111,8 @@ fun HomeSidebarDrawerContent(
                 onNavigateTransactions = onNavigateTransactions,
                 onNavigateAssetManagement = onNavigateAssetManagement,
                 onNavigateCategoryManagement = onNavigateCategoryManagement,
+                onNavigateScheduledTransaction = onNavigateScheduledTransaction,
             )
-
-            QuickAccountingCard(onNavigateScheduledTransaction = onNavigateScheduledTransaction)
 
             SettingEntryCard(onNavigateSettings = onNavigateSettings)
         }
@@ -325,12 +324,15 @@ private fun FunctionGridCard(
     onNavigateTransactions: () -> Unit,
     onNavigateAssetManagement: () -> Unit,
     onNavigateCategoryManagement: () -> Unit,
+    onNavigateScheduledTransaction: () -> Unit,
 ) {
+    val defaultIconTint = Color(0xFF6B7280)
     val items = listOf(
-        DrawerFunctionItem("图表统计", Icons.Default.PieChart, onNavigateStatistics),
-        DrawerFunctionItem("资产管理", Icons.Default.CreditCard, onNavigateAssetManagement),
-        DrawerFunctionItem("预算管理", Icons.Default.AutoGraph, {}),
-        DrawerFunctionItem("分类管理", Icons.Default.Category, onNavigateCategoryManagement),
+        DrawerFunctionItem("图表统计", Icons.Default.PieChart, onNavigateStatistics, defaultIconTint),
+        DrawerFunctionItem("资产管理", Icons.Default.CreditCard, onNavigateAssetManagement, defaultIconTint),
+        DrawerFunctionItem("预算管理", Icons.Default.AutoGraph, {}, defaultIconTint),
+        DrawerFunctionItem("分类管理", Icons.Default.Category, onNavigateCategoryManagement, defaultIconTint),
+        DrawerFunctionItem("定时记账", Icons.Default.CalendarMonth, onNavigateScheduledTransaction, BrandPrimary),
     )
 
     Card(
@@ -355,59 +357,13 @@ private fun FunctionGridCard(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(6.dp),
                         ) {
-                            Icon(imageVector = item.icon, contentDescription = null, tint = Color(0xFF6B7280), modifier = Modifier.size(24.dp))
+                            Icon(imageVector = item.icon, contentDescription = null, tint = item.iconTint, modifier = Modifier.size(24.dp))
                             Text(text = item.label, style = MaterialTheme.typography.bodyMedium, color = Color(0xFF374151))
                         }
                     }
                     repeat(3 - rowItems.size) {
                         Spacer(modifier = Modifier.weight(1f))
                     }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun QuickAccountingCard(
-    onNavigateScheduledTransaction: () -> Unit,
-) {
-    Card(
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp),
-        ) {
-            Text(
-                text = "定时记账",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-            ) {
-                Column(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(16.dp))
-                        .clickable(onClick = onNavigateScheduledTransaction)
-                        .padding(horizontal = 20.dp, vertical = 10.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.CalendarMonth,
-                        contentDescription = null,
-                        tint = BrandPrimary,
-                        modifier = Modifier.size(28.dp),
-                    )
-                    Text(
-                        text = "定时记账",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color(0xFF374151),
-                    )
                 }
             }
         }
@@ -448,6 +404,7 @@ private data class DrawerFunctionItem(
     val label: String,
     val icon: androidx.compose.ui.graphics.vector.ImageVector,
     val onClick: () -> Unit,
+    val iconTint: Color,
 )
 
 private fun longestStreak(days: Set<Int>): Int {

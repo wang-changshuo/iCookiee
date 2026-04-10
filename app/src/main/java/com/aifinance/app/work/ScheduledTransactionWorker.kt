@@ -75,7 +75,13 @@ class ScheduledTransactionWorker(
 
         val newCount = rule.firedCount + 1
         val fireLocal = LocalDateTime.of(today, LocalTime.of(rule.startHour, rule.startMinute))
-        val nextLocal = ScheduleOccurrenceCalculator.advance(fireLocal, rule.recurrence)
+        val nextBase = ScheduleOccurrenceCalculator.advance(fireLocal, rule.recurrence)
+        val nextLocal = ScheduleOccurrenceCalculator.firstLocalDateTimeOnOrAfter(
+            start = nextBase,
+            recurrence = rule.recurrence,
+            zone = zone,
+            now = now,
+        )
         val nextOccurrenceDate = nextLocal.toLocalDate()
 
         val maxOcc = rule.maxOccurrences

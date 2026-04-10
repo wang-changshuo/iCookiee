@@ -43,6 +43,12 @@ class ScheduledRuleRepositoryImpl @Inject constructor(
     }
 }
 
+// EVERY_MINUTE was removed from the enum; old DB rows still use that string.
+private fun parseStoredRecurrence(stored: String): ScheduledRecurrence = when (stored) {
+    "EVERY_MINUTE" -> ScheduledRecurrence.DAILY
+    else -> ScheduledRecurrence.valueOf(stored)
+}
+
 private fun ScheduledRuleEntity.toDomain(): ScheduledRule {
     return ScheduledRule(
         id = id,
@@ -56,7 +62,7 @@ private fun ScheduledRuleEntity.toDomain(): ScheduledRule {
         startDate = startDate,
         startHour = startHour,
         startMinute = startMinute,
-        recurrence = ScheduledRecurrence.valueOf(recurrence),
+        recurrence = parseStoredRecurrence(recurrence),
         endMode = ScheduledEndMode.valueOf(endMode),
         endDate = endDate,
         maxOccurrences = maxOccurrences,
