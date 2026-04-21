@@ -1,0 +1,7 @@
+## This file is a template for local.properties.
+## Copy this file to local.properties and fill in your own API keys.
+## DO NOT check local.properties into version control.
+
+sdk.dir=YOUR_SDK_PATH
+DEEPSEEK_API_KEY=your_deepseek_api_key_here
+PADDLEOCR_TOKEN=your_paddleocr_token_here

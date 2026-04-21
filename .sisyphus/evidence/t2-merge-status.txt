@@ -1,0 +1,43 @@
+Task 2: Merge echenglight/feat/theme-dark-and-clear-history into integration branch
+================================================================================
+Current branch: integration/merge-theme-dark-and-clear-history
+HEAD: c326520 style(drawer): 统一定时记账图标颜色为默认灰色
+Merge status: CONFLICT (automatic merge failed)
+Merge command used: git merge echenglight/feat/theme-dark-and-clear-history --no-ff --allow-unrelated-histories -m "Merge branch 'feat/theme-dark-and-clear-history' from echenglight"
+Note: --allow-unrelated-histories was required because the two branches have unrelated histories.
+
+Conflict files (AA = add/add conflict):
+-----------------------------------------
+AA .gitignore
+AA README.md
+AA app/build.gradle.kts
+AA app/src/main/java/com/aifinance/app/MainActivity.kt
+AA app/src/main/java/com/aifinance/app/navigation/AiFinanceNavHost.kt
+AA core/data/src/main/java/com/aifinance/core/data/di/RepositoryModule.kt
+AA core/data/src/main/java/com/aifinance/core/data/repository/Repositories.kt
+AA core/data/src/main/java/com/aifinance/core/data/repository/TransactionRepositoryImpl.kt
+AA core/database/src/main/java/com/aifinance/core/database/dao/AccountDao.kt
+AA core/database/src/main/java/com/aifinance/core/database/dao/TransactionDao.kt
+AA feature/home/build.gradle.kts
+AA feature/home/src/main/java/com/aifinance/feature/home/HomeDrawerContent.kt
+AA feature/home/src/main/java/com/aifinance/feature/home/HomeScreen.kt
+AA feature/home/src/main/java/com/aifinance/feature/home/HomeSidebarDrawerContent.kt
+AA feature/home/src/main/java/com/aifinance/feature/home/HomeViewModel.kt
+AA feature/home/src/main/java/com/aifinance/feature/home/TopRecordAiBar.kt
+AA feature/home/src/main/java/com/aifinance/feature/home/component/GradientGlassCard.kt
+AA feature/settings/src/main/java/com/aifinance/feature/settings/SettingsScreen.kt
+AA feature/transactions/build.gradle.kts
+AA feature/transactions/src/main/java/com/aifinance/feature/transactions/TransactionsViewModel.kt
+AA feature/transactions/src/main/java/com/aifinance/feature/transactions/navigation/TransactionsNavigation.kt
+AA settings.gradle.kts
+
+Total conflict files: 22
+
+Additional files added by merge (no conflict):
+-----------------------------------------------
+A  app/src/main/java/com/aifinance/app/MainViewModel.kt
+A  core/data/src/main/java/com/aifinance/core/data/repository/UserPreferencesRepository.kt
+A  feature/settings/src/main/java/com/aifinance/feature/settings/SettingsViewModel.kt
+A  screenshot/Screenshot_20260326_161738.png
+A  screenshot/Screenshot_20260326_162744.png
+A  screenshot/Screenshot_20260326_164418.png

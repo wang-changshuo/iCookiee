@@ -1,0 +1,17 @@
+.gradle/
+build/
+**/build/
+.idea/
+*.iml
+
+# Local configuration file (sdk path, API keys, etc.)
+local.properties
+*.hprof
+.agent/
+temp/
+%TEMP%/
+opencode.db
+
+# OS
+.DS_Store
+Thumbs.db
